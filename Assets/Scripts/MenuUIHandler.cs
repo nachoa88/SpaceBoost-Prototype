@@ -15,6 +15,7 @@ public class MenuUIHandler : MonoBehaviour
     public TMP_InputField playerNameInput;
     public TextMeshProUGUI bestScoreText;
 
+
     private void Awake()
     {
         if (MenuManager.Instance != null)

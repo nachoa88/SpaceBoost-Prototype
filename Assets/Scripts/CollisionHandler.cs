@@ -14,6 +14,7 @@ public class CollisionHandler : MonoBehaviour
 
     AudioSource audioSource;
 
+
     bool isTransitioning = false;
     bool collisionDisabled = false;
 
@@ -79,6 +80,7 @@ public class CollisionHandler : MonoBehaviour
         crashParticles.Play();
         GetComponent<Movement>().enabled = false;
         Invoke("ReloadLevel", levelLoadDelay);
+        FindObjectOfType<GameManager>().UpdateLives();
     }
 
     void ReloadLevel()

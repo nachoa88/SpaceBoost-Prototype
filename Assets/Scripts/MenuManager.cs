@@ -14,10 +14,8 @@ public class MenuManager : MonoBehaviour
     {
         if (Instance != null)
         {
-
             Destroy(gameObject);
             return;
-
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
@@ -42,7 +40,6 @@ public class MenuManager : MonoBehaviour
         string json = JsonUtility.ToJson(data);
 
         File.WriteAllText(Application.persistentDataPath + "/savedata.json", json);
-
     }
 
 
@@ -56,7 +53,6 @@ public class MenuManager : MonoBehaviour
 
             bestScore = data.bestScore;
             playerWithBestScore = data.playerWithBestScore;
-
         }
     }
 }
