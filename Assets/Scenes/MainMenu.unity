@@ -1926,6 +1926,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerNameInput: {fileID: 1077383584}
   bestScoreText: {fileID: 795731981}
+  gameManagerPrefab: {fileID: 65662899344202573, guid: 6f61c1aea4c06034a80a0ac319206799, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

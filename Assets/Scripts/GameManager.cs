@@ -1,24 +1,28 @@
 using System.Collections;
 using TMPro;
+using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    //public TextMeshProUGUI scoreText;
+    public TextMeshProUGUI scoreText;
     public TextMeshProUGUI gameOverText;
     public TextMeshProUGUI livesText;
-    // To be able to stop the game, we need to determinate if the game is active or over.
+    
+    // To be able to stop the game, we need to determinate if the game is active or not.
     public bool isGameActive;
-    // We need to be able to reference the button & title screen to turn them on and off. 
+    // To be able to pause the game, we need to determinate if the game is paused or not.
+    public bool isGamePaused;
+    
+    // We need to be able to reference the restartButton & pauseScreen to turn them on and off. 
     public Button restartButton;
-    //public GameObject titleScreen;
     public GameObject pauseScreen;
 
-    //private int score;
     [SerializeField] int lives = 3;
-    private bool paused;
+    private int score = 0;
+
 
 
     void Awake()
@@ -37,6 +41,16 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+        // This must go first because if not the Coroutine won't know that the game is active and won't start.
+        isGameActive = true;
+        // It will turn the integer into a string, so that it gets written in the TMP.
+        livesText.text = "Lives: " + lives.ToString();
+        
+        UpdateScore(0);
+    }
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
@@ -45,49 +59,33 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // We pass the integer of the difficulty to modify the method.
-    void Start()
-    {
-        // This must go first because if not the Coroutine won't know that the game is active and won't start.
-        isGameActive = true;
-        // It will turn the integer into a string, so that it gets written in the TMP.
-        livesText.text = "Lives: " + lives.ToString();
-        
-        
-        // Set score to 0
-        //score = 0;
-        //UpdateScore(0);
-    }
-
-    /* This method will change the paused boolean when it is called. When the boolean is changed to true, it
-       enables the pauseScreen and sets the Time.timeScale to 0. Setting the Time.timeScale to 0 makes it
-       so that physics calculations are paused. When the boolean is changed to false, it disables the
-       pauseScreen and sets the Time.timeScale to 1.*/
+    /* This method will change the paused boolean when it is called. When the boolean is changed to true, it enables the pauseScreen 
+       and sets the Time.timeScale to 0. Setting the Time.timeScale to 0 makes the physics calculations to be paused, the normal value is 1. */
     void ChangePaused()
     {
-        if (!paused)
+        if (!isGamePaused)
         {
-            paused = true;
+            isGamePaused = true;
             pauseScreen.SetActive(true);
             Time.timeScale = 0;
         }
         else
         {
-            paused = false;
+            isGamePaused = false;
             pauseScreen.SetActive(false);
             Time.timeScale = 1;
         }
+
+        // Missing a way to make the sound of thrust not being played while paused.
     }
 
-    
-    /*
     public void UpdateScore(int scoreToAdd)
     {
         // Update the score before the text.
         score += scoreToAdd;
         // Update text. Add to the textmeshpro the words we need + the variable we created for the score.
         scoreText.text = "Score: " + score;
-    }*/
+    }
 
     public void UpdateLives()
     {
@@ -95,7 +93,6 @@ public class GameManager : MonoBehaviour
         {
             TakeLife();
         }
-        // If the player has at least one life, reset Game Session.
         else
         {
             GameOver();
@@ -104,17 +101,14 @@ public class GameManager : MonoBehaviour
 
     void TakeLife()
     {
-        // First we substract one life.
+        // We substract one life.
         lives--;
-        // Then we look for the number of scene that we are currently running.
-        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
-        // Finally we reload the current scene.
-        SceneManager.LoadScene(currentSceneIndex);
         livesText.text = "Lives: " + lives.ToString();
     }
 
     public void GameOver()
     {
+        livesText.text = "Lives: 0";
         gameOverText.gameObject.SetActive(true);
         restartButton.gameObject.SetActive(true);
         isGameActive = false;
@@ -122,6 +116,8 @@ public class GameManager : MonoBehaviour
 
     public void RestartGame()
     {
+        // Destroy the current GameManager object so everything is reseted to the Game Manager prefab.
+        Destroy(gameObject); 
         /* You can get the scene to reload by naming it or just calling the Active scene at the moment.
            The rest of the information of this method is used in the inspector of the button, it has an On Click () method.*/
         SceneManager.LoadScene(0);
