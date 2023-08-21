@@ -3,9 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using UnityEngine.SceneManagement;
+using System.Reflection;
+using Unity.VisualScripting;
+using UnityEditor.Experimental.GraphView;
+using TMPro;
 
 public class MenuManager : MonoBehaviour
 {
+    public TextMeshProUGUI bestScoreText;
+
     public static MenuManager Instance;
     public int bestScore = 0;
     public string playerName;
@@ -55,5 +61,16 @@ public class MenuManager : MonoBehaviour
             bestScore = data.bestScore;
             playerWithBestScore = data.playerWithBestScore;
         }
+    }
+
+    public void ResetHighScore()
+    {
+        // Set values to zero and none.
+        bestScore = 0;
+        playerWithBestScore = "Player Name";
+        // Run the Save Player Score method to actually save them.
+        SavePlayerScore();
+        // Update the UI to display the reset high score
+        bestScoreText.text = $" {playerWithBestScore} {bestScore}";
     }
 }

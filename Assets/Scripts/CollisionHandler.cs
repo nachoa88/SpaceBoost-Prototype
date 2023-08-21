@@ -13,13 +13,20 @@ public class CollisionHandler : MonoBehaviour
     [SerializeField] ParticleSystem crashParticles;
 
     AudioSource audioSource;
-
+    GameManager gameManager;
 
     bool isTransitioning = false;
     bool collisionDisabled = false;
 
+    void Start()
+    {
+        audioSource = GetComponent<AudioSource>();
+        gameManager = FindObjectOfType<GameManager>();
+    }
+
     void Update()
     {
+        // If we want to add more "trick" keys, we can add them in this method.
         RespondToDebugKeys();
     }
 
@@ -36,11 +43,6 @@ public class CollisionHandler : MonoBehaviour
         }
     }
 
-    void Start()
-    {
-        audioSource = GetComponent<AudioSource>();
-    }
-
     void OnCollisionEnter(Collision other)
     {
         if (isTransitioning || collisionDisabled)
@@ -51,12 +53,14 @@ public class CollisionHandler : MonoBehaviour
         switch (other.gameObject.tag) 
         {
             case "Friendly":
-                Debug.Log("This thing is friendly");
+                Debug.Log("You're ready to launch!");
                 break;
             case "Finish":
+                Debug.Log("Yes! You've succeded!");
                 StartSuccessSequence();
                 break;
             default:
+                Debug.Log("Oh no! You've crashed!");
                 StartCrashSequence();
                 break;
         }
@@ -64,6 +68,7 @@ public class CollisionHandler : MonoBehaviour
 
     void StartSuccessSequence()
     {
+        FindObjectOfType<GameManager>().PlayerScore();
         isTransitioning = true;
         audioSource.Stop();
         audioSource.PlayOneShot(success);
@@ -87,16 +92,24 @@ public class CollisionHandler : MonoBehaviour
     {
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
         SceneManager.LoadScene(currentSceneIndex);
+        FindObjectOfType<GameManager>().RestartTimer();
     }
 
     void LoadNextLevel()
     {
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
         int nextSceneIndex = currentSceneIndex + 1;
+
         if (nextSceneIndex == SceneManager.sceneCountInBuildSettings)
         {
-            nextSceneIndex = 0;
+            gameManager.ShowFinalScore();
         }
-        SceneManager.LoadScene(nextSceneIndex);
+        else 
+        {
+            SceneManager.LoadScene(nextSceneIndex);
+            gameManager.RestartTimer();
+        }
+        //SceneManager.LoadScene(nextSceneIndex);
+        //FindObjectOfType<GameManager>().RestartTimer();
     }
 }
