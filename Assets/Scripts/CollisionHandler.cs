@@ -13,7 +13,7 @@ public class CollisionHandler : MonoBehaviour
     [SerializeField] ParticleSystem crashParticles;
 
     AudioSource audioSource;
-    GameManager gameManager;
+    //GameManager gameManager;
 
     bool isTransitioning = false;
     bool collisionDisabled = false;
@@ -21,7 +21,7 @@ public class CollisionHandler : MonoBehaviour
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
-        gameManager = FindObjectOfType<GameManager>();
+        //gameManager = FindObjectOfType<GameManager>();
     }
 
     void Update()
@@ -102,14 +102,12 @@ public class CollisionHandler : MonoBehaviour
 
         if (nextSceneIndex == SceneManager.sceneCountInBuildSettings)
         {
-            gameManager.ShowFinalScore();
+            FindObjectOfType<GameManager>().ShowFinalScore();
         }
         else 
         {
             SceneManager.LoadScene(nextSceneIndex);
-            gameManager.RestartTimer();
+            FindObjectOfType<GameManager>().RestartTimer();
         }
-        //SceneManager.LoadScene(nextSceneIndex);
-        //FindObjectOfType<GameManager>().RestartTimer();
     }
 }

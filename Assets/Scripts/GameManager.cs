@@ -155,7 +155,7 @@ public class GameManager : MonoBehaviour
     {
         // First we round up the time left in timerValue into an Integer.
         timeRemainingAtSuccess = Mathf.RoundToInt(timerValue);
-        Debug.Log("Your score at the end of the level is of: " + timeRemainingAtSuccess);
+        Debug.Log("Your score at the end of this level is of: " + timeRemainingAtSuccess);
         // Then we update the score in our scoreText.
         UpdateScore(timeRemainingAtSuccess);
     }
@@ -172,6 +172,8 @@ public class GameManager : MonoBehaviour
     public void ShowFinalScore()
     {
         youWonScreen.SetActive(true);
+        // Calculate score: score + lives.
+        score += (lives * 20);
         finalScoreText.text = "Congratulations,\nyour score is of " + score + "!";
 
         // Compare and update Best score.
