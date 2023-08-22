@@ -16,9 +16,9 @@ public class Movement : MonoBehaviour
     // CACHE - e.g. references for readability or speed.
     Rigidbody playerRb;
     AudioSource audioSource;
-    
+
     // STATE - private instance (member) variables.
-    // e.g.: private bool isAlive;
+    // As booleans: isAlive = true;
 
     void Start()
     {
@@ -34,7 +34,7 @@ public class Movement : MonoBehaviour
 
     void ProcessThrust()
     {
-        if (Input.GetKey(KeyCode.Space))
+        if (Input.GetKey(KeyCode.W))
         {
             StartThrusting();
         }
